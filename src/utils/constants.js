@@ -1,1 +1,1 @@
-exports.errorStatus = [4, 5];
+exports.errorStatus = ["4", "5"];

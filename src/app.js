@@ -15,7 +15,6 @@ const ApiError = require('./utils/ApiError');
 const { prismaInstance } = require('./db');
 const bcrypt = require('bcryptjs');
 const PrimsaActions = require('./config/PrismaActions');
-const dataSanitizer = require('./middlewares/dataSantizer');
 
 prismaInstance.$use(async (params, next) => {
   if (
@@ -73,9 +72,6 @@ if (config.env === 'production') {
   app.use('/v1/auth', authLimiter);
 }
 
-// Used to remove the password fields in response data
-app.use(dataSanitizer);
-
 // v1 api routes
 app.use('/v1', routes);
 
@@ -84,14 +80,10 @@ app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
 });
 
-
-
-
 // convert error to ApiError, if needed
 app.use(errorConverter);
 
 // handle error
 app.use(errorHandler);
-
 
 module.exports = app;

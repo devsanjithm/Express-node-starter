@@ -8,11 +8,12 @@ const register = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
-const login = catchAsync(async (req, res) => {
+const login = catchAsync(async (req, res, next) => {
   const { email_address, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email_address, password);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+  res.locals.res = { user, tokens };
+  next();
 });
 
 const logout = catchAsync(async (req, res) => {
